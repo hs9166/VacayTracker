@@ -2,6 +2,7 @@
 const newVacationFormEl = document.getElementsByTagName("form")[0];
 const startDateInputEl = document.getElementById("start-date");
 const endDateInputEl = document.getElementById("end-date");
+const pastVacationContainer =document.getElementById("past-vacations");
 
 //listen to form submissions
 newVacationFormEl.addEventListener("submit", (event)=> {
