@@ -88,3 +88,29 @@ self.addEventListener("fetch", (event)=>{
         })()
     );//respond with
 });//fetch
+
+//send a message to the client - we will use to update data later 
+function sendMessageToPWA(message){
+    self.clients.matchAll().then((clients)=> {
+        clients.array.forEach((client) => {
+            client.postMessage(message);
+        });
+    });
+}
+
+//send message every 10 seconds 
+setInterval(()=>{
+    sendMessageToPWA({
+        type: "update", data: "New Data Available"});
+}, 10000);
+
+//listen for messages from the app 
+self.addEventListener("Message", (event)=>{
+    console.log("Service Worker received a message", event.data);
+
+    //you can respond back if needed 
+    event.source.postMessage({
+        type: "Repsonse",
+        data: "Message received by sw"
+    });
+});
