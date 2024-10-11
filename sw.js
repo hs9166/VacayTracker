@@ -125,3 +125,28 @@ channel.onmessage = (event) => {
     //ECHO THE MESSAGE BACK TO THE PWA  
     channel.postMessage("Service Worker received:" + event.data);
 };
+
+//open or create the database
+let db;
+const dbName = "SyncDatabase";
+const request =indexedDB.open(dbName, 1); //name and version needs to match app.js
+
+request.onerror = function (event) {
+    console.error("Database ERROR: " + event.target.error);
+};
+
+request.onsuccess = function(event){
+    //now we actually have our db
+    db = event.target.result;
+    console.log("Database opened successfully in service worker");
+};
+
+self.addEventListener("sync", function(event){
+    if(event.tag === "send-data"){
+        event.waitUntil(sendDataToServer());
+    }
+});
+
+function sendDataToServer(){ //no parameters because we'll get that from the database
+
+}; //sendDataToServer
