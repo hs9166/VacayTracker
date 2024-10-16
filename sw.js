@@ -1,4 +1,4 @@
-const VERSION ="v3";
+const VERSION ="v4";
 
 //Offline resource list -- what you want access to when you're offline 
 const APP_STATIC_RESOURCES = [
@@ -148,5 +148,44 @@ self.addEventListener("sync", function(event){
 });
 
 function sendDataToServer(){ //no parameters because we'll get that from the database
-
+    return getAllPendingData().then(function(dataList){
+        return Promise.all(
+            dataList.map(function(item){
+                //simulate sending the data to the server
+                return new PromiseRejectionEvent((resolve, reject)=>{
+                    setTimeout(()=>{
+                        if (Math.random() > 0.1){ //90% success rate
+                            console.log("Data sent successfully: " , item.data);
+                            resolve(item.id);
+                        }else{
+                            console.log("Failed to send data: " , item.data);
+                            reject(new Error("Failed to send data"));
+                        }
+                    }, 1000);
+                }).then(function(){
+                    //if successful, remove the item from the db
+                    return removeDataFromIndexDB(item.id);
+                });
+            })
+        )
+    })
 }; //sendDataToServer
+
+function getAllPendingData(){
+    return new Promise((resolve, reject) =>{
+        //transcation to read data from db
+        const transaction = db.transaction(["pendingData"], "readonly");
+        const objectStore = transaction.objectStore("pendingData");
+        const request = objectStore.getAll();
+
+        request.onsuccess = function(event){
+            resolve(event.target.result);
+        };
+
+        request.onerror = function(event){
+            reject("Error fetching data: " + event.target.error);
+        };
+
+    });
+}
+  
