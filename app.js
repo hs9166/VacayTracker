@@ -132,7 +132,7 @@ function formatDate(dateString){
 renderPastVacations();
 
 //register the service worker
-if("serviceWorker" in navigator){
+if("serviceWork" in navigator){
     navigator.serviceWorker.register("sw.js").then((registration)=>{
         console.log("Service worker registered with scope:", registration.scope);
     })
