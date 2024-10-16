@@ -245,7 +245,7 @@ document.getElementById("dataForm").addEventListener("submit", function(event){
         }).then(()=>{
             //update the UI for successful registration
             document.getElementById("status").textContent =
-            "Sync regstered. Data will be sent when online.";
+            "Sync registered. Data will be sent when online.";
         })
         .catch((error)=>{
             console.error("Error: ", error);
